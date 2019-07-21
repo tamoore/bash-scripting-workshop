@@ -1,0 +1,58 @@
+* Overview
+** UNIX
+*** How did programs input data originally?
+Originally, before UNIX, programs had to explicitly connect to input and
+output devices. Specific details of how a punchcard reader, for example,
+would be required to load input for a particular program. This was obviously
+a pretty tedious task.
+
+*** UNIX abstract devices
+With the advent of abstract devices in UNIX, the above problem was solved and data
+input was abstracted into a stream of bytes with an EOF (End of File)
+character.
+
+*** Std Input, Std Output, Std Error?
+**** Standard Input
+- Standard input is stream data (often text) going into a program
+- It's file descriptor is 0 (zero)
+
+**** Standard Output
+
+*** Pipelines
+**** What is a pipeline?
+A pipeline is a sequence of one or more commands separated by one of the control operators ‘|’ or ‘|&’.
+
+#+BEGIN_SRC bash
+git log | grep "v1.0.0"
+#+END_SRC
+
+The output of each command in the pipeline is connected via a pipe to the input of the next command. That is, each command reads the previous command’s output. 
+
+**** What does ~|&~ mean?
+It's essentially shorthand for ~2>&1~, which means redirect all output of the
+command on the left side, to standard out on the right side. 
+
+* Exercises
+** 1.1
+*** The shebang!
+**** Why use ~#!/usr/bin/env bash~ and not ~#!/bin/bash~
+Running any program through ~/usr/bin/env~ has the benefit of using your
+*environment* to determine what program to load. An example of this is that
+I have two versions of ~bash~ on my system. I have the default version that
+macOS comes bundled with (^3), but I use version 5 in my day to day use.
+I've set my path to ensure that version 5 is loaded first. So if I use the
+above shebang that means all my scripts run using version 5. However, if I
+were to use ~/bin/bash~ then it would use version 3 that comes bundled with
+macOS.
+
+*** What does ~set -e~ mean? The set builtin
+**** Modifying bash/shell behaviour
+***** ~set -e~
+#+BEGIN_SRC bash
+#!/usr/bin/env bash
+
+set -e 
+#+END_SRC
+Exit immediately 
+
+
