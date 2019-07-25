@@ -1,5 +1,5 @@
 .DS_Store
-markdown/temp/*
+presentation/temp/*
 *.pdf
 *.tex
 *.log
