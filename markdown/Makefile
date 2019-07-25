@@ -4,10 +4,10 @@ HANDOUTS := $(patsubst %.md,%.md.handout.pdf,$(wildcard *.md))
 all : $(SLIDES) $(HANDOUTS)
 
 %.md.slides.pdf : %.md
-	pandoc $^ -t beamer --template=template/default.beamer --slide-level 2 -o $@
+	pandoc $^ -t beamer --pdf-engine-opt="-shell-escape" --template=template/default.beamer --slide-level 2 -o $@
 
 %.md.handout.pdf : %.md
-	pandoc $^ -t beamer --template=template/default.beamer --slide-level 2 -V handout -o $@ 
+	pandoc $^ -t beamer  --pdf-engine-opt="-shell-escape" --template=template/default.beamer --slide-level 2 -V handout -o $@ 
 	pdfnup $@ --nup 1x2 --no-landscape --keepinfo \
 		--paper letterpaper --frame true --scale 0.9 \
 		--suffix "nup"

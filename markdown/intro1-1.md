@@ -8,10 +8,12 @@ titlepage-note: |
 	- Running build scripts and understanding why errors arise
 	- How everything we do ultimately starts in the shell
 fontsize: 15pt
+header-includes:
+	- \usepackage{tabu}
+	- \usepackage{minted}
 ---
 
 # Unix
-
 ## How did programs input data originally?
 
 Originally, before UNIX, programs had to explicitly connect to input and
@@ -87,7 +89,6 @@ error `2>/dev/null`
 ![redirection](./images/redirection.jpeg)
 
 # Exercises
-
 ```{.bash}
 #!/usr/bin/env bash
 
@@ -151,6 +152,7 @@ Execute with a Python interpreter
 Do nothing, but return a non-zero exit status
 }
 
+
 ## The Set Builtin
 Have you ever wondered what the following means
 
@@ -196,6 +198,7 @@ main() {
 main
 ```
 
+
 ## -e
 One of the most useful set options is `-e`. Dash `e` means **Exit immediately** and is useful particularly in ci or build scripts where you want errors to instantly stop a script from running and exit.
 
@@ -238,6 +241,7 @@ main() {
 main
 ```
 
+
 ## -o
 You may often see in bash scripts a set option `-o`. Dash `o` means `option-name` and is an extension that only bash provides. Bourne shell, or `sh` does not have this option. So if your hash-bang is set to Bourne it will not understand this option. 
 
@@ -275,6 +279,7 @@ main() {
 
 main
 ```
+
 ## -u
 This option causes the bash shell to treat unset variables as an error and exit immediately. Unset variables are a common cause of bugs in shell scripts, so having unset variables cause an immediate exit is often highly desirable behavior.^[Tom Van Eyck, *Safer bash scripts with 'set -euxo pipefail'* (https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/).]
 
@@ -310,6 +315,7 @@ main() {
 main
 ```
 
+
 ## -x
 The -x option causes bash to print each command before executing it. This can be a great help when trying to debug a bash script failure. Note that arguments get expanded before a command gets printed, which will cause our logs to contain the actual argument values that were present at the time of execution!^[Tom Van Eyck, *Safer bash scripts with 'set -euxo pipefail'* (https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/).]
 
@@ -342,6 +348,72 @@ main() {
   echo "Foo"
   foo
   echo "Bar!"
+}
+
+main
+```
+
+## Shell Parameters
+In bash, a parameter is an entity that stores a value. A variable is a parameter denoted by a name.
+
+* An example of a *special parameter* in bash is `$?`.
+    * `$?` Expands to the exit status of the most recently executed foreground pipeline.
+    * `$-` Expands to the current option flags as specified by `set`
+* An example of *named* parameter in bash is `foo=bar`
+
+Let's explore the usage of the special parameter and also `variables` (named parameters).
+
+## Special Parameters
+The shell treats several parameters specially. These parameters may only be referenced; assignment to them is not allowed.
+
+All of the below characters are prefixed with `$`.
+
+\begin{center}
+\begin{tabu} to 0.8\textwidth { | X[l] | X[l] | }
+ \hline
+ Special Char & Description \\ [0.5ex]
+ \hline\hline
+ - & Expands to the current options flags\\
+ \hline
+ @ & Expands to the positional parameters \\
+ \hline
+ ? & Expands to the exit status \\ [1ex] 
+ \hline
+\end{tabu}
+\end{center}
+
+
+## Exercise 3.1
+
+``` {.bash}
+#!/usr/bin/env bash
+
+error() {
+  foo
+}
+
+main() {
+  error
+  # We want to output the exit status 
+  # of error. What special character
+  # would we use?
+  echo "What special character goes here?"
+}
+
+main
+```
+## Answer 3.1
+
+```{.bash}
+#!/usr/bin/env bash
+
+error() {
+  foo
+}
+
+main() {
+  error
+  echo "$?"
 }
 
 main
