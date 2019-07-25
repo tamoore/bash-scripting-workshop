@@ -9,8 +9,15 @@ titlepage-note: |
 	- How everything we do ultimately starts in the shell
 fontsize: 15pt
 header-includes:
+	- \usepackage[outputdir=temp]{minted}
 	- \usepackage{tabu}
-	- \usepackage{minted}
+	- \definecolor{LightYellow}{RGB}{255, 254, 230}
+	- \newminted{bash}{fontsize=\scriptsize, 
+                   linenos,
+                   numbersep=8pt,
+                   frame=lines,
+                   bgcolor=LightYellow,
+                   framesep=3mm}
 ---
 
 # Unix
@@ -88,25 +95,39 @@ error `2>/dev/null`
 
 ![redirection](./images/redirection.jpeg)
 
-# Exercises
-```{.bash}
+# Exercises 
+
+## How to use the environment {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
+# -- Redirection
 # . "1.1.bash"
+
+# -- Set builtin
 # . "2.0.bash"
 # . "2.1.bash"
 # . "2.2.bash"
-...
-```
+# . "2.3.bash"
+# . "2.4.bash"
 
-## Exercise 1.1
-```{.bash}
+# -- Parameters
+# . "3.1.bash"
+\end{bashcode}
+}
+\exampleCode
+
+## Exercise 1.1 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 redirect_to_std_out() {
   # 1. Change this to redirect to stderr
   echo "This is an error" >&1 | sed  "s/ is/ isn't/"
-  
 }
 
 main() {
@@ -114,16 +135,19 @@ main() {
 }
 
 main
-```
+\end{bashcode}
+}
+\exampleCode
 
-## Answer 1.1
-```{.bash}
+## Answer 1.1 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={4,5}}
 #!/usr/bin/env bash
 
 redirect_to_std_out() {
   # 1. Changed the file descriptor to 2
   echo "This is an error" >&2 | sed  "s/ is/ isn't/"
-  
 }
 
 main() {
@@ -131,20 +155,25 @@ main() {
 }
 
 main
-```
+\end{bashcode*}
+}
+\exampleCode
 
 # Bash
 
-## Shebang! hashbang! pound-bang!
+## Shebang! hashbang! pound-bang! {.fragile}
 - The shebang is an interpreter directive
 - It instructs the shell which interpreter to use to parse the script.
 
-### Examples:
-```{.bash}
+### Examples: 
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/bin/sh 
 #!/usr/bin/env python 
 #!/bin/false 
-```
+\end{bashcode}
+}
+\exampleCode
 
 \note{ 
 Execute the file using the Bourne shell
@@ -153,21 +182,26 @@ Do nothing, but return a non-zero exit status
 }
 
 
-## The Set Builtin
+## The Set Builtin {.fragile}
 Have you ever wondered what the following means
 
-```{.bash}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/local/env bash
 
 set -e # What does this mean
-```
+\end{bashcode}
+}
+\exampleCode
+
 `set` allows you to change the values of shell options and set the positional parameters, or to display the names and values of shell variables
 
 If no options or arugments are supplied, `set` displays the names and values of all shell variables and functions.
 
-## Exercise 2.0
+## Exercise 2.0 {.fragile}
 
-```{.bash}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 # We want to see all the parameters 
@@ -179,11 +213,14 @@ main() {
 }
 
 main
-```
+\end{bashcode}
+}
+\exampleCode
 
-## Answer 2.0
+## Answer 2.0 {.fragile}
 
-```{.bash}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={6}}
 #!/usr/bin/env bash
 
 # We want to see all the parameters 
@@ -196,20 +233,26 @@ main() {
 }
 
 main
-```
+\end{bashcode*}
+}
+\exampleCode
 
 
-## -e
+## -e {.fragile}
 One of the most useful set options is `-e`. Dash `e` means **Exit immediately** and is useful particularly in ci or build scripts where you want errors to instantly stop a script from running and exit.
 
-```{.bash}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 set -e
-```
+\end{bashcode}
+}
+\exampleCode
 
-## Exercise 2.1
-```{.bash}
+## Exercise 2.1 {.fragile}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 # This script will still echo Bar!
@@ -223,10 +266,13 @@ main() {
 }
 
 main
-```
+\end{bashcode}
+}
+\exampleCode
 
-## Answer 2.1
-```{.bash}
+## Answer 2.1 {.fragile}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={5}}
 #!/usr/bin/env bash
 
 # By adding a set -e the script will exit
@@ -239,7 +285,9 @@ main() {
 }
 
 main
-```
+\end{bashcode*}
+}
+\exampleCode
 
 
 ## -o
@@ -247,8 +295,10 @@ You may often see in bash scripts a set option `-o`. Dash `o` means `option-name
 
 - `pipefail`: the return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status
 
-## Exercise 2.2
-```{.bash}
+## Exercise 2.2 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 # Currently this script will still echo Bar!
@@ -262,9 +312,15 @@ main() {
 }
 
 main
-```
-## Answer 2.2
-```{.bash}
+\end{bashcode}
+}
+\exampleCode
+
+
+## Answer 2.2 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={6}}
 #!/usr/bin/env bash
 
 set -e
@@ -278,13 +334,17 @@ main() {
 }
 
 main
-```
+\end{bashcode*}
+}
+\exampleCode
 
 ## -u
 This option causes the bash shell to treat unset variables as an error and exit immediately. Unset variables are a common cause of bugs in shell scripts, so having unset variables cause an immediate exit is often highly desirable behavior.^[Tom Van Eyck, *Safer bash scripts with 'set -euxo pipefail'* (https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/).]
 
-## Exercise 2.3
-```{.bash}
+## Exercise 2.3  {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 # Currently this script will still echo Bar!
@@ -297,10 +357,14 @@ main() {
 }
 
 main
-```
+\end{bashcode}
+}
+\exampleCode
 
-## Answer 2.3
-```{.bash}
+## Answer 2.3 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={5}}
 #!/usr/bin/env bash
 
 # Adding set -u will exit 
@@ -313,14 +377,17 @@ main() {
 }
 
 main
-```
-
+\end{bashcode*}
+}
+\exampleCode
 
 ## -x
 The -x option causes bash to print each command before executing it. This can be a great help when trying to debug a bash script failure. Note that arguments get expanded before a command gets printed, which will cause our logs to contain the actual argument values that were present at the time of execution!^[Tom Van Eyck, *Safer bash scripts with 'set -euxo pipefail'* (https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/).]
 
-## Exercise 2.4
-```{.bash}
+## Exercise 2.4 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 # We want to debug this script
@@ -336,10 +403,14 @@ main() {
 }
 
 main
-```
-## Answer 2.4
+\end{bashcode}
+}
+\exampleCode
 
-```{.bash}
+## Answer 2.4 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={5}}
 #!/usr/bin/env bash
 
 set -xe
@@ -351,7 +422,9 @@ main() {
 }
 
 main
-```
+\end{bashcode*}
+}
+\exampleCode
 
 ## Shell Parameters
 In bash, a parameter is an entity that stores a value. A variable is a parameter denoted by a name.
@@ -383,9 +456,10 @@ All of the below characters are prefixed with `$`.
 \end{center}
 
 
-## Exercise 3.1
+## Exercise 3.1 {.fragile}
 
-``` {.bash}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 #!/usr/bin/env bash
 
 error() {
@@ -401,10 +475,14 @@ main() {
 }
 
 main
-```
-## Answer 3.1
+\end{bashcode}
+}
+\exampleCode
 
-```{.bash}
+## Answer 3.1 {.fragile}
+
+\defverbatim[colored]\exampleCode{
+\begin{bashcode*}{highlightlines={9}}
 #!/usr/bin/env bash
 
 error() {
@@ -417,4 +495,6 @@ main() {
 }
 
 main
-```
+\end{bashcode*}
+}
+\exampleCode
