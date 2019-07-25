@@ -69,14 +69,17 @@ character.
 
 \note{}
 
-## Pipelines
+## Pipelines {.fragile}
 ### What is a pipeline?
 - A pipeline is a sequence of one or more commands separated by one of the control operators `|` or `|&`.
 - The output of each command in the pipeline is connected via a pipe to the input of the next command. That is, each command reads the previous command’s output. 
 
-``` {.bash}
+\defverbatim[colored]\exampleCode{
+\begin{bashcode}
 $ git log | grep "v1.0.0"
-```
+\end{bashcode}
+}
+\exampleCode
 
 ## Redirection
 ### What does `2>&1` mean?
