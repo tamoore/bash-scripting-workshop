@@ -74,7 +74,7 @@ $ git log | grep "v1.0.0"
 
 You may oten see the above in scripts usually in the format of something like `> /dev/null 2>&1`
 
-This might seem a bit cryptic at first, but it essentially means is send all
+This might seem a bit cryptic at first, but it essentially means send all
 output of the running program to the blackhole `/dev/null` and include both
 `standard error` & `standard output`. You may want to only send standard
 output to dev null and that would be `1>/dev/null`. Or maybe just standard
@@ -85,6 +85,18 @@ error `2>/dev/null`
 ## Redirection Illustrated
 
 ![redirection](./images/redirection.jpeg)
+
+# Exercises
+
+```{.bash}
+#!/usr/bin/env bash
+
+# . "1.1.bash"
+# . "2.0.bash"
+# . "2.1.bash"
+# . "2.2.bash"
+...
+```
 
 ## Exercise 1.1
 ```{.bash}
@@ -193,4 +205,144 @@ One of the most useful set options is `-e`. Dash `e` means **Exit immediately** 
 set -e
 ```
 
+## Exercise 2.1
+```{.bash}
+#!/usr/bin/env bash
 
+# This script will still echo Bar!
+# even though foo doesn't exist!
+# How can we make it exit so that bar 
+# does not echo?
+
+main() {
+  foo
+  echo "Bar!" 
+}
+
+main
+```
+
+## Answer 2.1
+```{.bash}
+#!/usr/bin/env bash
+
+# By adding a set -e the script will exit
+# immediately when it encounters an error
+set -e
+
+main() {
+  foo
+  echo "Bar!" 
+}
+
+main
+```
+
+## -o
+You may often see in bash scripts a set option `-o`. Dash `o` means `option-name` and is an extension that only bash provides. Bourne shell, or `sh` does not have this option. So if your hash-bang is set to Bourne it will not understand this option. 
+
+- `pipefail`: the return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status
+
+## Exercise 2.2
+```{.bash}
+#!/usr/bin/env bash
+
+# Currently this script will still echo Bar!
+# Can you make it fail when the pipe fails?
+
+set -e
+
+main() {
+  foo | echo "foo"
+  echo "Bar!" 
+}
+
+main
+```
+## Answer 2.2
+```{.bash}
+#!/usr/bin/env bash
+
+set -e
+# Adding set -o pipfail will exit the script
+# When that pipeline fails.
+set -o pipefail
+
+main() {
+  foo | echo "foo"
+  echo "Bar!" 
+}
+
+main
+```
+## -u
+This option causes the bash shell to treat unset variables as an error and exit immediately. Unset variables are a common cause of bugs in shell scripts, so having unset variables cause an immediate exit is often highly desirable behavior.^[Tom Van Eyck, *Safer bash scripts with 'set -euxo pipefail'* (https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/).]
+
+## Exercise 2.3
+```{.bash}
+#!/usr/bin/env bash
+
+# Currently this script will still echo Bar!
+# $foo is unset though, so that's not good.
+# Can you make this script exit 1?
+
+main() {
+  echo $foo
+  echo "Bar!"
+}
+
+main
+```
+
+## Answer 2.3
+```{.bash}
+#!/usr/bin/env bash
+
+# Adding set -u will exit 
+# If any unset variables are found
+set -u
+
+main() {
+  echo $foo
+  echo "Bar!"
+}
+
+main
+```
+
+## -x
+The -x option causes bash to print each command before executing it. This can be a great help when trying to debug a bash script failure. Note that arguments get expanded before a command gets printed, which will cause our logs to contain the actual argument values that were present at the time of execution!^[Tom Van Eyck, *Safer bash scripts with 'set -euxo pipefail'* (https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/).]
+
+## Exercise 2.4
+```{.bash}
+#!/usr/bin/env bash
+
+# We want to debug this script
+# How can we output each line of code
+# Before execution so that we know
+# Where our code has failed?
+# This script must exit 127
+
+main() {
+  echo "Foo"
+  foo
+  echo "Bar!"
+}
+
+main
+```
+## Answer 2.4
+
+```{.bash}
+#!/usr/bin/env bash
+
+set -xe
+
+main() {
+  echo "Foo"
+  foo
+  echo "Bar!"
+}
+
+main
+```
